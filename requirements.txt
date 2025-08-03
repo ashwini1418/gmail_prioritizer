@@ -1,0 +1,12 @@
+flask
+pandas
+scikit-learn
+nltk
+spacy
+transformers
+plotly
+dash
+python-dotenv
+email-validator
+gunicorn
+joblib
