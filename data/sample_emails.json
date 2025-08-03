@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "subject": "Urgent: Meeting with client tomorrow",
+    "body": "Hi team, we need to discuss the quarterly reports before the client meeting at 2 PM tomorrow. Please prepare your sections and bring the latest analytics data.",
+    "from": "boss@company.com",
+    "to": "you@company.com",
+    "date": "2025-08-03T14:30:00",
+    "priority": "HIGH",
+    "tags": ["URGENT", "WORK", "MEETING"]
+  },
+  {
+    "id": 2,
+    "subject": "50% Off Sale - Limited Time!",
+    "body": "Don't miss our biggest sale of the year! Shop now and save on everything. Limited time offer - ends tomorrow!",
+    "from": "sales@store.com",
+    "to": "you@email.com",
+    "date": "2025-08-03T10:15:00",
+    "priority": "LOW",
+    "tags": ["PROMOTIONAL", "SPAM"]
+  },
+  {
+    "id": 3,
+    "subject": "Project deadline approaching",
+    "body": "Just a reminder that the website redesign project is due next week. Let me know if you need any help with your tasks.",
+    "from": "colleague@company.com",
+    "to": "you@company.com",
+    "date": "2025-08-03T09:45:00",
+    "priority": "MEDIUM",
+    "tags": ["WORK", "DEADLINE"]
+  },
+  {
+    "id": 4,
+    "subject": "Invoice #12345 - Payment Due",
+    "body": "Your invoice for web hosting services is now due. Please process payment within 5 business days to avoid service interruption.",
+    "from": "billing@hostingco.com",
+    "to": "you@company.com",
+    "date": "2025-08-03T11:20:00",
+    "priority": "HIGH",
+    "tags": ["INVOICE", "URGENT"]
+  },
+  {
+    "id": 5,
+    "subject": "Happy Birthday!",
+    "body": "Wishing you a wonderful birthday! Hope you have a fantastic day celebrating with family and friends.",
+    "from": "friend@gmail.com",
+    "to": "you@personal.com",
+    "date": "2025-08-03T08:00:00",
+    "priority": "LOW",
+    "tags": ["PERSONAL", "SOCIAL"]
+  },
+  {
+    "id": 6,
+    "subject": "Security Alert: Suspicious Login Attempt",
+    "body": "We detected a login attempt from an unrecognized device. If this wasn't you, please secure your account immediately.",
+    "from": "security@service.com",
+    "to": "you@email.com",
+    "date": "2025-08-03T16:45:00",
+    "priority": "HIGH",
+    "tags": ["SECURITY", "URGENT"]
+  }
+]
