@@ -1,0 +1,21 @@
+{
+  "tag_colors": {
+    "URGENT": "#FF4444",
+    "WORK": "#4A90E2",
+    "PERSONAL": "#7ED321",
+    "MEETING": "#F5A623",
+    "DEADLINE": "#FF6B6B",
+    "INVOICE": "#9013FE",
+    "PROMOTIONAL": "#FFC107",
+    "SPAM": "#757575",
+    "SECURITY": "#E91E63",
+    "SOCIAL": "#4CAF50",
+    "PROJECT": "#2196F3",
+    "NEWSLETTER": "#FF9800"
+  },
+  "priority_colors": {
+    "HIGH": "#FF4444",
+    "MEDIUM": "#FF9800",
+    "LOW": "#4CAF50"
+  }
+}

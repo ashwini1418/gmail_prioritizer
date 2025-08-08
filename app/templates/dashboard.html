@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <!-- Header -->
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="h2">
+                <i class="fas fa-tachometer-alt me-2 text-primary"></i>
+                Email Dashboard
+            </h1>
+            <div class="badge bg-success fs-6">
+                <i class="fas fa-brain me-1"></i>
+                AI Accuracy: {{ "%.1f"|format(summary.ai_accuracy) }}%
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card bg-primary text-white">
+            <div class="stats-number">{{ summary.total_emails }}</div>
+            <div>Total Emails</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card" style="background-color: var(--priority-high); color: white;">
+            <div class="stats-number">{{ summary.priority_distribution.HIGH.count if summary.priority_distribution.HIGH else 0 }}</div>
+            <div>High Priority</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card bg-warning text-white">
+            <div class="stats-number">{{ summary.urgent_alerts|length }}</div>
+            <div>Urgent Alerts</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card bg-success text-white">
+            <div class="stats-number">{{ summary.tag_analytics|length }}</div>
+            <div>Active Tags</div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <!-- Priority Distribution Chart -->
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-pie me-2"></i>Priority Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="priorityChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tag Analytics Chart -->
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-tags me-2"></i>Tag Analytics</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="tagChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Urgent Alerts -->
+{% if summary.urgent_alerts %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5><i class="fas fa-exclamation-triangle me-2"></i>Urgent Emails Requiring Attention</h5>
+            </div>
+            <div class="card-body">
+                {% for email in summary.urgent_alerts %}
+                <div class="email-item p-3 mb-2 rounded border-start border-4 border-danger">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">{{ email.subject }}</h6>
+                            <p class="text-muted mb-2">From: {{ email.from }}</p>
+                            <div>
+                                {{ email.priority_html|safe }}
+                                {{ email.tags_html|safe }}
+                            </div>
+                        </div>
+                        <span class="badge bg-danger">URGENT</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Recent Emails -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-clock me-2"></i>Recent Emails with AI Predictions</h5>
+            </div>
+            <div class="card-body">
+                {% for email in summary.recent_emails %}
+                <div class="email-item priority-{{ email.predicted_priority }} p-3 mb-3 rounded">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h6 class="mb-1">{{ email.subject }}</h6>
+                            <p class="text-muted mb-0">From: {{ email.from }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            {{ email.priority_html|safe }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ email.tags_html|safe }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('emails_list') }}" class="btn btn-primary">
+                        <i class="fas fa-list me-2"></i>View All Emails
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Priority Distribution Chart
+    const priorityCtx = document.getElementById('priorityChart').getContext('2d');
+    const priorityChart = new Chart(priorityCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for priority, data in summary.priority_distribution.items() %}
+                '{{ priority }}',
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for priority, data in summary.priority_distribution.items() %}
+                    {{ data.count }},
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    {% for priority, data in summary.priority_distribution.items() %}
+                    '{{ data.color }}',
+                    {% endfor %}
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Tag Analytics Chart
+    const tagCtx = document.getElementById('tagChart').getContext('2d');
+    const tagChart = new Chart(tagCtx, {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for tag, data in summary.tag_analytics.items() %}
+                {% if loop.index <= 6 %}
+                '{{ tag }}',
+                {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Email Count',
+                data: [
+                    {% for tag, data in summary.tag_analytics.items() %}
+                    {% if loop.index <= 6 %}
+                    {{ data.count }},
+                    {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    {% for tag, data in summary.tag_analytics.items() %}
+                    {% if loop.index <= 6 %}
+                    '{{ data.color }}',
+                    {% endif %}
+                    {% endfor %}
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
